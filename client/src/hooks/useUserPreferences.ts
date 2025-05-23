@@ -23,6 +23,8 @@ export function useUserPreferences() {
   useEffect(() => {
     if (user?.preferences) {
       setPreferences(user.preferences);
+      // Also store in localStorage for faster access
+      localStorage.setItem('userPreferences', JSON.stringify(user.preferences));
     }
   }, [user]);
 
@@ -48,6 +50,9 @@ export function useUserPreferences() {
 
   const savePreferences = (newPreferences: UserPreferences) => {
     setPreferences(newPreferences);
+    // Store in localStorage for immediate availability across the app
+    localStorage.setItem('userPreferences', JSON.stringify(newPreferences));
+    // Also save to the database
     savePreferencesMutation.mutate(newPreferences);
   };
 

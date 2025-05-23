@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import BusinessList from "@/components/settings/BusinessList";
@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { PlusIcon, SaveIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
-import { queryClient, apiRequest } from "@/lib/queryClient";
+import { useUserPreferences } from "@/hooks/useUserPreferences";
 
 export default function Settings() {
   const { user } = useAuth();
@@ -186,8 +186,8 @@ export default function Settings() {
                     Default Currency
                   </label>
                   <Select 
-                    defaultValue={preferences.defaultCurrency} 
-                    onValueChange={(value) => setPreferences({...preferences, defaultCurrency: value})}
+                    value={preferences.defaultCurrency} 
+                    onValueChange={(value) => savePreferences({...preferences, defaultCurrency: value})}
                   >
                     <SelectTrigger className="w-full sm:w-[240px]">
                       <SelectValue placeholder="Select currency" />
@@ -208,8 +208,8 @@ export default function Settings() {
                     Date Format
                   </label>
                   <Select 
-                    defaultValue={preferences.dateFormat}
-                    onValueChange={(value) => setPreferences({...preferences, dateFormat: value})}
+                    value={preferences.dateFormat}
+                    onValueChange={(value) => savePreferences({...preferences, dateFormat: value})}
                   >
                     <SelectTrigger className="w-full sm:w-[240px]">
                       <SelectValue placeholder="Select date format" />
