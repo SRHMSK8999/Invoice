@@ -38,6 +38,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch user" });
     }
   });
+  
+  // User preferences
+  app.post('/api/preferences', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const preferencesSchema = z.object({
+        defaultCurrency: z.string(),
+        dateFormat: z.string()
+      });
+      
+      const validatedData = preferencesSchema.parse(req.body);
+      
+      // Update user preferences
+      const updatedUser = await storage.updateUserPreferences(userId, validatedData);
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error saving preferences:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to save preferences" });
+    }
+  });
 
   // Dashboard routes
   app.get('/api/dashboard', isAuthenticated, async (req: any, res) => {

@@ -1,22 +1,28 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import BusinessList from "@/components/settings/BusinessList";
 import BusinessForm from "@/components/settings/BusinessForm";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, SaveIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
+import { queryClient, apiRequest } from "@/lib/queryClient";
 
 export default function Settings() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("business");
   const [isAddingBusiness, setIsAddingBusiness] = useState(false);
   const [selectedBusiness, setSelectedBusiness] = useState<any>(null);
+  const [preferences, setPreferences] = useState({
+    defaultCurrency: "USD",
+    dateFormat: "MM/DD/YYYY"
+  });
+  const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
 
   const { data: businesses } = useQuery({
@@ -26,6 +32,34 @@ export default function Settings() {
   const { data: invoiceTemplates } = useQuery({
     queryKey: ["/api/invoice-templates"],
   });
+  
+  // Add mutation for saving preferences
+  const savePreferencesMutation = useMutation({
+    mutationFn: async (data: { defaultCurrency: string; dateFormat: string }) => {
+      return await apiRequest("POST", "/api/preferences", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      toast({
+        title: "Settings saved",
+        description: "Your preferences have been updated successfully.",
+      });
+      setIsSaving(false);
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: `Failed to save preferences: ${error.message}`,
+        variant: "destructive",
+      });
+      setIsSaving(false);
+    }
+  });
+
+  const handleSavePreferences = () => {
+    setIsSaving(true);
+    savePreferencesMutation.mutate(preferences);
+  };
 
   const handleAddBusiness = () => {
     setIsAddingBusiness(true);

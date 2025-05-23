@@ -37,6 +37,7 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+  updateUserPreferences(id: string, preferences: { defaultCurrency: string, dateFormat: string }): Promise<User>;
 
   // Business operations
   getBusinesses(userId: string): Promise<Business[]>;
@@ -133,6 +134,18 @@ export class DatabaseStorage implements IStorage {
           updatedAt: new Date(),
         },
       })
+      .returning();
+    return user;
+  }
+
+  async updateUserPreferences(id: string, preferences: { defaultCurrency: string, dateFormat: string }): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({
+        preferences: preferences,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, id))
       .returning();
     return user;
   }
