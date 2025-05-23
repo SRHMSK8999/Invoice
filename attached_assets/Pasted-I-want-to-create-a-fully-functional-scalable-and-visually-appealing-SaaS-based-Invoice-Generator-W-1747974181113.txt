@@ -1,0 +1,74 @@
+I want to create a fully functional, scalable, and visually appealing SaaS-based Invoice Generator Web Application designed for businesses, freelancers, and service providers. The application should include the following key features:
+
+✅ Core Features:
+Client Management
+
+Add, edit, and manage clients with full details (name, email, phone, address, tax/GST number).
+
+Search, filter, and sort clients for quick access.
+
+Product Management
+
+Manage products or services with fields such as MRP, Price, Product Name, and Category (e.g. Products, Services, Web Developer, etc.).
+
+Include an Active/Inactive toggle button for each product or service.
+
+Business Management
+
+Users should be able to manage one or more businesses.
+
+Allow upload, edit, or delete of a business logo which will be used on invoices and documents.
+
+Attractive, Neat & Clean Dashboard
+
+Design a user-friendly and modern dashboard that clearly displays key data like invoices, earnings, expenses, and client stats.
+
+Include charts or graphs for easy insights.
+
+Profit & Loss (P&L) Statement
+
+Automatically calculate and generate P&L reports based on income (invoices) and expenses.
+
+Include filters by date, business, or category.
+
+Multi-Currency Support (All Countries)
+
+Enable currency selection from a global list, with special support for INR (Indian Rupees).
+
+Allow setting default currency in business settings.
+
+Invoice Templates & Customisation
+
+Provide multiple professional invoice templates.
+
+Allow users to customise fields like logo, colours, labels, font, and footer.
+
+Invoice PDF Generation & Download
+
+Allow one-click PDF generation for invoices with a clear Download button.
+
+Ensure layout remains consistent across devices and browsers.
+
+Automatic Currency Selection on Invoice Page
+
+Automatically apply the selected default currency from settings when creating a new invoice.
+
+Expense Management
+
+Add and manage business expenses with category tags like Office Rent, Software Expense, Staff Expense, etc.
+
+Integrate expenses into P&L reporting.
+
+Fully Functional Navigation Tabs
+
+Ensure all major modules such as Client Management, Product Management, Business Settings, and Invoice Generator work properly and smoothly.
+
+Attractive Landing Page
+
+Build a professional, informative, and visually appealing landing page that explains the features and benefits of the application.
+
+Include sections for feature highlights, pricing (optional), testimonials, FAQs, and a Sign In / Sign Up button at the top header.
+
+Would you like help with:
+
+The UI design wireframes for the dashboard or invoice page
