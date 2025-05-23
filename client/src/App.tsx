@@ -53,6 +53,20 @@ function Router() {
               </DashboardLayout>
             )}
           </Route>
+          <Route path="/invoices/new">
+            {() => (
+              <DashboardLayout>
+                <Invoices />
+              </DashboardLayout>
+            )}
+          </Route>
+          <Route path="/invoices/:id">
+            {() => (
+              <DashboardLayout>
+                <Invoices />
+              </DashboardLayout>
+            )}
+          </Route>
           <Route path="/clients">
             {() => (
               <DashboardLayout>
