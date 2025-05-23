@@ -669,7 +669,7 @@ export default function InvoiceForm({ invoiceId }: InvoiceFormProps) {
                                     </SelectTrigger>
                                   </FormControl>
                                   <SelectContent>
-                                    <SelectItem value="">Custom Item</SelectItem>
+                                    <SelectItem value="custom">Custom Item</SelectItem>
                                     {products?.map((product: any) => (
                                       <SelectItem 
                                         key={product.id} 

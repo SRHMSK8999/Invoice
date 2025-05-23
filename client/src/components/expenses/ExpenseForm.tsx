@@ -217,7 +217,7 @@ export default function ExpenseForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="">No Category</SelectItem>
+                    <SelectItem value="none">No Category</SelectItem>
                     {categories.map((category) => (
                       <SelectItem key={category.id} value={category.id.toString()}>
                         {category.name}
@@ -246,7 +246,7 @@ export default function ExpenseForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="">No Business</SelectItem>
+                    <SelectItem value="none">No Business</SelectItem>
                     {businesses.map((business) => (
                       <SelectItem key={business.id} value={business.id.toString()}>
                         {business.name}
