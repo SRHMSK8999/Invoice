@@ -213,7 +213,10 @@ export default function Settings() {
                   <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                     Default Currency
                   </label>
-                  <Select defaultValue="USD">
+                  <Select 
+                    defaultValue={preferences.defaultCurrency} 
+                    onValueChange={(value) => setPreferences({...preferences, defaultCurrency: value})}
+                  >
                     <SelectTrigger className="w-full sm:w-[240px]">
                       <SelectValue placeholder="Select currency" />
                     </SelectTrigger>
@@ -232,7 +235,10 @@ export default function Settings() {
                   <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                     Date Format
                   </label>
-                  <Select defaultValue="MM/DD/YYYY">
+                  <Select 
+                    defaultValue={preferences.dateFormat}
+                    onValueChange={(value) => setPreferences({...preferences, dateFormat: value})}
+                  >
                     <SelectTrigger className="w-full sm:w-[240px]">
                       <SelectValue placeholder="Select date format" />
                     </SelectTrigger>
@@ -245,6 +251,25 @@ export default function Settings() {
                 </div>
               </div>
             </CardContent>
+            <CardFooter>
+              <Button 
+                onClick={handleSavePreferences} 
+                disabled={isSaving}
+                className="ml-auto"
+              >
+                {isSaving ? (
+                  <>
+                    <span className="mr-2">Saving...</span>
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></span>
+                  </>
+                ) : (
+                  <>
+                    <SaveIcon className="mr-2 h-4 w-4" />
+                    Save Changes
+                  </>
+                )}
+              </Button>
+            </CardFooter>
           </Card>
         </TabsContent>
       </Tabs>
