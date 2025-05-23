@@ -23,11 +23,13 @@ export const currencies = [
 ];
 
 // Format currency amount based on currency code
-export const formatCurrency = (amount: number, currencyCode: string = "USD") => {
+export const formatCurrency = (amount: number, currencyCode?: string) => {
+  // Default to USD if no currency code is provided
+  const currency = currencyCode || "USD";
   try {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: currencyCode,
+      currency: currency,
     }).format(amount);
   } catch (error) {
     // Fallback if currency code is invalid

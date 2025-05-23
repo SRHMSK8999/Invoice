@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -18,11 +18,7 @@ export default function Settings() {
   const [activeTab, setActiveTab] = useState("business");
   const [isAddingBusiness, setIsAddingBusiness] = useState(false);
   const [selectedBusiness, setSelectedBusiness] = useState<any>(null);
-  const [preferences, setPreferences] = useState({
-    defaultCurrency: "USD",
-    dateFormat: "MM/DD/YYYY"
-  });
-  const [isSaving, setIsSaving] = useState(false);
+  const { preferences, savePreferences, isLoading: isSaving } = useUserPreferences();
   const { toast } = useToast();
 
   const { data: businesses } = useQuery({
@@ -33,32 +29,8 @@ export default function Settings() {
     queryKey: ["/api/invoice-templates"],
   });
   
-  // Add mutation for saving preferences
-  const savePreferencesMutation = useMutation({
-    mutationFn: async (data: { defaultCurrency: string; dateFormat: string }) => {
-      return await apiRequest("POST", "/api/preferences", data);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
-      toast({
-        title: "Settings saved",
-        description: "Your preferences have been updated successfully.",
-      });
-      setIsSaving(false);
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: `Failed to save preferences: ${error.message}`,
-        variant: "destructive",
-      });
-      setIsSaving(false);
-    }
-  });
-
   const handleSavePreferences = () => {
-    setIsSaving(true);
-    savePreferencesMutation.mutate(preferences);
+    savePreferences(preferences);
   };
 
   const handleAddBusiness = () => {
