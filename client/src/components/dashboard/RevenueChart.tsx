@@ -16,32 +16,32 @@ interface RevenueChartProps {
 }
 
 export default function RevenueChart({ data }: RevenueChartProps) {
-  // Format the data for Recharts
-  const chartData = data.map(item => {
-    // If the data comes from the database
-    if (item.month) {
-      return {
-        name: format(new Date(item.month), 'MMM'),
-        revenue: parseFloat(item.revenue || 0),
-        expenses: parseFloat(item.expenses || 0)
-      };
-    }
-    // If we're using sample data
-    return item;
-  });
-
-  // If there's no data, show a message
-  if (!data || data.length === 0) {
-    // Sample data for empty state
-    const sampleData = [
-      { name: 'Jan', revenue: 0, expenses: 0 },
-      { name: 'Feb', revenue: 0, expenses: 0 },
-      { name: 'Mar', revenue: 0, expenses: 0 },
-      { name: 'Apr', revenue: 0, expenses: 0 },
-      { name: 'May', revenue: 0, expenses: 0 },
-      { name: 'Jun', revenue: 0, expenses: 0 },
-    ];
-
+  // Default sample data for empty states
+  const sampleData = [
+    { name: 'Jan', revenue: 0, expenses: 0 },
+    { name: 'Feb', revenue: 0, expenses: 0 },
+    { name: 'Mar', revenue: 0, expenses: 0 },
+    { name: 'Apr', revenue: 0, expenses: 0 },
+    { name: 'May', revenue: 0, expenses: 0 },
+    { name: 'Jun', revenue: 0, expenses: 0 },
+  ];
+  
+  // Safely check if data is an array and process it
+  const chartData = Array.isArray(data) && data.length > 0
+    ? data.map(item => {
+        if (item && item.month) {
+          return {
+            name: format(new Date(item.month), 'MMM'),
+            revenue: parseFloat(item.revenue || 0),
+            expenses: parseFloat(item.expenses || 0)
+          };
+        }
+        return item;
+      })
+    : sampleData;
+  
+  // No data message with empty chart
+  if (!Array.isArray(data) || data.length === 0) {
     return (
       <Card>
         <CardHeader className="pb-2">
@@ -67,6 +67,7 @@ export default function RevenueChart({ data }: RevenueChartProps) {
     );
   }
 
+  // Display chart with data
   return (
     <Card>
       <CardHeader className="pb-2">
