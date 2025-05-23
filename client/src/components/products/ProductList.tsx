@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Pencil, Trash2, MoreHorizontal } from "lucide-react";
+import { formatCurrency } from "@/lib/currency";
 
 interface ProductListProps {
   products: any[] | undefined;
@@ -75,12 +76,7 @@ export default function ProductList({
     );
   }
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-  };
+
 
   return (
     <div className="overflow-x-auto">

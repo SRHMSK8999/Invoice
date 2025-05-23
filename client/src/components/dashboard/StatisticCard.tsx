@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
+import { formatCurrency } from "@/lib/currency";
 
 interface StatisticCardProps {
   title: string;
@@ -22,7 +23,7 @@ export default function StatisticCard({
 }: StatisticCardProps) {
   // Format the value as currency if needed
   const formattedValue = isCurrency 
-    ? `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
+    ? formatCurrency(value) 
     : value.toLocaleString();
 
   // Determine the change color and icon

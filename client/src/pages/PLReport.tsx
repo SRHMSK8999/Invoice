@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import { formatCurrency } from "@/lib/currency";
 import {
   BarChart,
   Bar,
@@ -100,7 +101,7 @@ export default function PLReport() {
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Income</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalIncome.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{formatCurrency(totalIncome)}</div>
           </CardContent>
         </Card>
         
@@ -109,7 +110,7 @@ export default function PLReport() {
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Expenses</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalExpenses.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{formatCurrency(totalExpenses)}</div>
           </CardContent>
         </Card>
         
@@ -119,7 +120,7 @@ export default function PLReport() {
           </CardHeader>
           <CardContent>
             <div className={`text-2xl font-bold ${netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              ${netProfit.toLocaleString()}
+              {formatCurrency(netProfit)}
             </div>
           </CardContent>
         </Card>
@@ -284,13 +285,13 @@ export default function PLReport() {
               <tbody>
                 <tr className="font-medium">
                   <td className="p-3 border-b">Income</td>
-                  <td className="text-right p-3 border-b">${totalIncome.toLocaleString()}</td>
+                  <td className="text-right p-3 border-b">{formatCurrency(totalIncome)}</td>
                   <td className="text-right p-3 border-b">100%</td>
                 </tr>
                 {incomeCategoryData.map((item, index) => (
                   <tr key={index} className="text-muted-foreground">
                     <td className="pl-8 p-3 border-b">{item.name}</td>
-                    <td className="text-right p-3 border-b">${item.value.toLocaleString()}</td>
+                    <td className="text-right p-3 border-b">{formatCurrency(item.value)}</td>
                     <td className="text-right p-3 border-b">
                       {totalIncome ? `${((item.value / totalIncome) * 100).toFixed(1)}%` : '0%'}
                     </td>
@@ -298,7 +299,7 @@ export default function PLReport() {
                 ))}
                 <tr className="font-medium">
                   <td className="p-3 border-b">Expenses</td>
-                  <td className="text-right p-3 border-b">${totalExpenses.toLocaleString()}</td>
+                  <td className="text-right p-3 border-b">{formatCurrency(totalExpenses)}</td>
                   <td className="text-right p-3 border-b">
                     {totalIncome ? `${((totalExpenses / totalIncome) * 100).toFixed(1)}%` : '0%'}
                   </td>
@@ -306,7 +307,7 @@ export default function PLReport() {
                 {expenseCategoryData.map((item, index) => (
                   <tr key={index} className="text-muted-foreground">
                     <td className="pl-8 p-3 border-b">{item.name}</td>
-                    <td className="text-right p-3 border-b">${item.value.toLocaleString()}</td>
+                    <td className="text-right p-3 border-b">{formatCurrency(item.value)}</td>
                     <td className="text-right p-3 border-b">
                       {totalIncome ? `${((item.value / totalIncome) * 100).toFixed(1)}%` : '0%'}
                     </td>
@@ -315,7 +316,7 @@ export default function PLReport() {
                 <tr className="font-bold bg-muted">
                   <td className="p-3">Net Profit</td>
                   <td className={`text-right p-3 ${netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    ${netProfit.toLocaleString()}
+                    {formatCurrency(netProfit)}
                   </td>
                   <td className={`text-right p-3 ${netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {totalIncome ? `${((netProfit / totalIncome) * 100).toFixed(1)}%` : '0%'}
