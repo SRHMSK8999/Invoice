@@ -22,25 +22,15 @@ export const currencies = [
   { code: "RUB", name: "Russian Ruble", symbol: "₽" },
 ];
 
+// Import getDefaultCurrency from useUserPreferences hook
+import { getDefaultCurrency } from "@/hooks/useUserPreferences";
+
 // Format currency amount based on currency code or user preferences
 export const formatCurrency = (amount: number, currencyCode?: string) => {
-  // Try to get from user preferences in localStorage
-  let currency = currencyCode;
+  // Use provided currency or get from user preferences
+  const currency = currencyCode || getDefaultCurrency();
   
-  if (!currency) {
-    try {
-      const userPrefs = localStorage.getItem('userPreferences');
-      if (userPrefs) {
-        const prefs = JSON.parse(userPrefs);
-        currency = prefs.defaultCurrency;
-      }
-    } catch (e) {
-      console.error("Error reading user preferences", e);
-    }
-  }
-  
-  // If still no currency code found, default to USD
-  currency = currency || "USD";
+  console.log(`Formatting ${amount} with currency: ${currency}`);
   
   try {
     return new Intl.NumberFormat("en-US", {
@@ -48,6 +38,7 @@ export const formatCurrency = (amount: number, currencyCode?: string) => {
       currency: currency,
     }).format(amount);
   } catch (error) {
+    console.error("Error formatting currency:", error);
     // Fallback if currency code is invalid
     return `${amount.toFixed(2)} ${currency}`;
   }

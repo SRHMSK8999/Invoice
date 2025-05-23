@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "./useAuth";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "./use-toast";
 
@@ -9,37 +9,63 @@ interface UserPreferences {
   dateFormat: string;
 }
 
+// Get cached preferences from localStorage
+const getCachedPreferences = (): UserPreferences => {
+  const defaultPrefs = {
+    defaultCurrency: "USD",
+    dateFormat: "MM/DD/YYYY"
+  };
+  
+  try {
+    const cached = localStorage.getItem('userPreferences');
+    if (cached) {
+      return JSON.parse(cached);
+    }
+  } catch (error) {
+    console.error("Error reading cached preferences:", error);
+  }
+  
+  return defaultPrefs;
+};
+
 export function useUserPreferences() {
   const { user } = useAuth();
   const { toast } = useToast();
   
-  // Default preferences
-  const [preferences, setPreferences] = useState<UserPreferences>({
-    defaultCurrency: "USD",
-    dateFormat: "MM/DD/YYYY"
-  });
+  // Initialize with cached preferences or defaults
+  const [preferences, setPreferences] = useState<UserPreferences>(getCachedPreferences());
   
   // Update preferences from user data when it loads
   useEffect(() => {
     if (user?.preferences) {
+      console.log("User preferences loaded from server:", user.preferences);
       setPreferences(user.preferences);
-      // Also store in localStorage for faster access
+      // Store in localStorage for faster access across components
       localStorage.setItem('userPreferences', JSON.stringify(user.preferences));
     }
   }, [user]);
 
   const savePreferencesMutation = useMutation({
     mutationFn: async (data: UserPreferences) => {
+      console.log("Saving preferences to server:", data);
       return await apiRequest("POST", "/api/preferences", data);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("Preferences saved successfully:", data);
+      
+      // Force refresh user data
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      
+      // Also update any components that use preferences directly
+      queryClient.invalidateQueries({ queryKey: ["userPreferences"] });
+      
       toast({
         title: "Settings saved",
         description: "Your preferences have been updated successfully.",
       });
     },
     onError: (error) => {
+      console.error("Error saving preferences:", error);
       toast({
         title: "Error",
         description: `Failed to save preferences: ${error.message}`,
@@ -70,10 +96,30 @@ export const getDefaultCurrency = (): string => {
   if (cachedPrefs) {
     try {
       const prefs = JSON.parse(cachedPrefs);
-      return prefs.defaultCurrency || "USD";
+      if (prefs.defaultCurrency) {
+        console.log("Using currency from localStorage:", prefs.defaultCurrency);
+        return prefs.defaultCurrency;
+      }
     } catch (e) {
-      return "USD";
+      console.error("Error parsing user preferences:", e);
     }
   }
+  console.log("Using default currency: USD");
   return "USD";
+};
+
+// Utility function to get the default date format
+export const getDefaultDateFormat = (): string => {
+  const cachedPrefs = localStorage.getItem('userPreferences');
+  if (cachedPrefs) {
+    try {
+      const prefs = JSON.parse(cachedPrefs);
+      if (prefs.dateFormat) {
+        return prefs.dateFormat;
+      }
+    } catch (e) {
+      console.error("Error parsing user preferences:", e);
+    }
+  }
+  return "MM/DD/YYYY";
 };
